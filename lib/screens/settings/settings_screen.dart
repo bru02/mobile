@@ -25,6 +25,7 @@ import 'package:filcnaplo_mobile_ui/screens/settings/accounts/account_tile.dart'
 import 'package:filcnaplo_mobile_ui/screens/settings/accounts/account_view.dart';
 import 'package:filcnaplo_mobile_ui/screens/settings/privacy_view.dart';
 import 'package:filcnaplo_mobile_ui/screens/settings/settings_helper.dart';
+import 'package:filcnaplo_mobile_ui/screens/settings/supporters/supporters_screen.dart';
 import 'package:filcnaplo_mobile_ui/screens/settings/updates/updates_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -358,11 +359,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
                   child: Panel(
                     title: Text("notifications".i18n),
-                    child: SwitchListTile(
-                      title: Text("news".i18n, style: TextStyle(fontWeight: FontWeight.w500)),
-                      onChanged: (v) => settings.update(context, newsEnabled: v),
-                      value: settings.newsEnabled,
-                      activeColor: Theme.of(context).colorScheme.secondary,
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: SwitchListTile(
+                        contentPadding: EdgeInsets.only(left: 12.0),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                        title: Text("news".i18n, style: TextStyle(fontWeight: FontWeight.w500)),
+                        onChanged: (v) => settings.update(context, newsEnabled: v),
+                        value: settings.newsEnabled,
+                        activeColor: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   ),
                 ),
@@ -393,11 +399,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         title: Text("news".i18n),
                         onPressed: () => openNews(context),
                       ),
-                      // PanelButton(
-                      //   leading: Icon(FeatherIcons.dollarSign),
-                      //   title: Text("supporters".i18n),
-                      // onPressed: () => openSupporters(context), // TODO
-                      // ),
+                      PanelButton(
+                        leading: Icon(FeatherIcons.dollarSign),
+                        title: Text("supporters".i18n),
+                        onPressed: () => openSupporters(context),
+                      ),
                       PanelButton(
                         leading: Icon(FeatherIcons.lock),
                         title: Text("privacy".i18n),
@@ -416,11 +422,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
                     child: Panel(
                       title: Text("Developer Settings"),
-                      child: SwitchListTile(
-                        title: Text("Developer Mode", style: TextStyle(fontWeight: FontWeight.w500)),
-                        onChanged: (v) => settings.update(context, developerMode: false),
-                        value: settings.developerMode,
-                        activeColor: Theme.of(context).colorScheme.secondary,
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: SwitchListTile(
+                          contentPadding: EdgeInsets.only(left: 12.0),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                          title: Text("Developer Mode", style: TextStyle(fontWeight: FontWeight.w500)),
+                          onChanged: (v) => settings.update(context, developerMode: false),
+                          value: settings.developerMode,
+                          activeColor: Theme.of(context).colorScheme.secondary,
+                        ),
                       ),
                     ),
                   ),
@@ -455,6 +466,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  void openSupporters(BuildContext context) =>
+      Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(builder: (context) => SupportersScreen()));
   void openNews(BuildContext context) => Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(builder: (context) => NewsScreen()));
   void openUpdates(BuildContext context) => UpdateView.show(updateProvider.releases.first, context: context);
   void openPrivacy(BuildContext context) => PrivacyView.show(context);

@@ -42,6 +42,18 @@ class _TimetablePageState extends State<TimetablePage> with TickerProviderStateM
   late Widget empty;
   late List<List<Lesson>> editableLessons;
 
+  bool _sameDate(DateTime a, DateTime b) => (a.year == b.year && a.month == b.month && a.day == b.day);
+  int _getDayIndex(DateTime date) {
+    int index = 0;
+    if (_controller.days == null || _controller.days?.length == 0) return index;
+
+    // find the first day with the current date
+    index = _controller.days?.indexOf(_controller.days!.firstWhere((day) => _sameDate(day.first.date, date), orElse: () => [])) ?? 0;
+    if (index == -1) index = 0; // fallback
+
+    return index;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,17 +66,26 @@ class _TimetablePageState extends State<TimetablePage> with TickerProviderStateM
 
     // Only update the TabController on week changes
     _controller.addListener(() {
+      if (_controller.days == null) return;
       setState(() {
-        _tabController =
-            TabController(length: _controller.days?.length ?? 0, vsync: this, initialIndex: min(_tabController.index, _controller.days?.length ?? 0));
-        _tabController.animateTo(0);
+        _tabController = TabController(
+            length: _controller.days!.length, vsync: this, initialIndex: min(_tabController.index, max(_controller.days!.length - 1, 0)));
+
+        _tabController.animateTo(_getDayIndex(DateTime.now()));
 
         // Empty is updated once every week change
         empty = Empty(subtitle: "empty".i18n);
       });
     });
 
-    _controller.jump(_controller.currentWeek, context: context);
+    _controller.jump(_controller.currentWeek, context: context, initial: true);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _controller.dispose();
+    super.dispose();
   }
 
   String dayTitle(int index) => DateFormat("EEEE", I18n.of(context).locale.languageCode).format(_controller.days![index].first.date);
@@ -196,6 +217,7 @@ class _TimetablePageState extends State<TimetablePage> with TickerProviderStateM
                                     onRefresh: () => timetableProvider.fetch(week: _controller.currentWeek, db: false),
                                     color: Theme.of(context).colorScheme.secondary,
                                     child: ListView.builder(
+                                      padding: EdgeInsets.zero,
                                       physics: BouncingScrollPhysics(),
                                       itemCount: _controller.days![tab].length + 2,
                                       itemBuilder: (context, index) {

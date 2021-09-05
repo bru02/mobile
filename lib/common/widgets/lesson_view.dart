@@ -57,9 +57,7 @@ class LessonView extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             subtitle: Text(
-              lesson.substituteTeacher == ""
-                  ? lesson.teacher
-                  : lesson.substituteTeacher,
+              lesson.substituteTeacher == "" ? lesson.teacher : lesson.substituteTeacher,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontWeight: FontWeight.w500),
@@ -79,19 +77,13 @@ class LessonView extends StatelessWidget {
               child: Detail(
                 title: "Room".i18n,
                 description: roomsProvider.getRoomForLesson(lesson),
-                descColor: roomsProvider.hasOverwrite(lesson)
-                    ? Theme.of(context).colorScheme.secondary
-                    : null,
+                descColor: roomsProvider.hasOverwrite(lesson) ? Theme.of(context).colorScheme.secondary : null,
               ),
             ),
-          if (lesson.description != "")
-            Detail(title: "Description".i18n, description: lesson.description),
+          if (lesson.description != "") Detail(title: "Description".i18n, description: lesson.description),
           if (lesson.lessonYearIndex != null)
-            Detail(
-                title: "Lesson Number".i18n,
-                description: "${lesson.lessonYearIndex}."),
-          if (lesson.groupName != "")
-            Detail(title: "Group".i18n, description: lesson.groupName),
+            Detail(title: "Lesson Number".i18n, description: "${lesson.lessonYearIndex}."),
+          if (lesson.groupName != "") Detail(title: "Group".i18n, description: lesson.groupName),
         ],
       ),
     );

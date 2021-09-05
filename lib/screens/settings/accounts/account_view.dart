@@ -28,10 +28,15 @@ class AccountView extends StatelessWidget {
           AccountTile(
             profileImage: ProfileImage(
               name: _firstName,
-              backgroundColor: ColorUtils.stringToColor(_firstName),
+              backgroundColor: ColorUtils.stringToColor(user.name),
             ),
-            name: Text(user.name, style: TextStyle(fontWeight: FontWeight.w500)),
-            username: Text(user.username),
+            name: SelectableText(
+              user.name,
+              style: TextStyle(fontWeight: FontWeight.w500),
+              maxLines: 2,
+              minLines: 1,
+            ),
+            username: SelectableText(user.username),
           ),
 
           // User details
