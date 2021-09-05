@@ -1,5 +1,6 @@
 import 'package:filcnaplo_kreta_api/providers/exam_provider.dart';
 import 'package:filcnaplo_kreta_api/providers/homework_provider.dart';
+import 'package:filcnaplo/api/providers/rooms_provider.dart';
 import 'package:filcnaplo/theme.dart';
 import 'package:filcnaplo_kreta_api/models/exam.dart';
 import 'package:filcnaplo_kreta_api/models/homework.dart';
@@ -22,6 +23,7 @@ class LessonTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RoomsProvider roomsProvider = Provider.of<RoomsProvider>(context);
     List<Widget> subtiles = [];
 
     Color accent = Theme.of(context).colorScheme.secondary;
@@ -136,15 +138,19 @@ class LessonTile extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(right: 6.0),
                               child: Text(
-                                lesson.room,
+                                roomsProvider.getRoomForLesson(lesson),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.fade,
                                 maxLines: 2,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors.of(context)
-                                        .text
-                                        .withOpacity(.75)),
+                                    color: roomsProvider.hasOverwrite(lesson)
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .secondary
+                                        : AppColors.of(context)
+                                            .text
+                                            .withOpacity(.75)),
                               ),
                             ),
                           ),

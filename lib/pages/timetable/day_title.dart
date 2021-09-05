@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:filcnaplo/utils/format.dart';
 
 class DayTitle extends StatefulWidget {
-  DayTitle({Key? key, required this.dayTitle, required this.controller}) : super(key: key);
+  const DayTitle(
+      {Key? key,
+      required this.dayTitle,
+      required this.controller,
+      this.fontSize = 32.0,
+      this.fontWeight = FontWeight.bold})
+      : super(key: key);
 
   final String Function(int) dayTitle;
   final TabController controller;
+  final double fontSize;
+  final FontWeight fontWeight;
 
   @override
   State<DayTitle> createState() => _DayTitleState();
@@ -34,6 +42,11 @@ class _DayTitleState extends State<DayTitle> {
         builder: (context, _) {
           double value = widget.controller.animation!.value;
 
+          if (widget.controller.indexIsChanging &&
+              widget.dayTitle(value.ceil()) == widget.dayTitle(value.floor())) {
+            value = value.roundToDouble();
+          }
+
           return Transform.translate(
             offset: Offset(-value * width / 1.5, 0),
             child: Row(
@@ -46,7 +59,11 @@ class _DayTitleState extends State<DayTitle> {
                     width: MediaQuery.of(context).size.width / 1.5,
                     child: Text(
                       widget.dayTitle(index).capital(),
-                      style: TextStyle(color: AppColors.of(context).text.withOpacity(opacity), fontSize: 32.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color:
+                              AppColors.of(context).text.withOpacity(opacity),
+                          fontSize: widget.fontSize,
+                          fontWeight: widget.fontWeight),
                     ),
                   );
                 },

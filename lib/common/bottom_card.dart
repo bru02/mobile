@@ -15,6 +15,8 @@ class BottomCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(14.0),
           color: AppColors.of(context).highlight,
         ),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

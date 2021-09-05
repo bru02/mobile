@@ -3,7 +3,10 @@ import 'package:filcnaplo/utils/format.dart';
 import 'package:filcnaplo_kreta_api/models/lesson.dart';
 import 'package:filcnaplo_mobile_ui/common/bottom_card.dart';
 import 'package:filcnaplo_mobile_ui/common/detail.dart';
+import 'package:filcnaplo_mobile_ui/common/widgets/room_edit_bottom_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:filcnaplo/api/providers/rooms_provider.dart';
 import 'lesson_view.i18n.dart';
 
 class LessonView extends StatelessWidget {
@@ -15,6 +18,7 @@ class LessonView extends StatelessWidget {
   Widget build(BuildContext context) {
     Color accent = Theme.of(context).colorScheme.secondary;
     String lessonIndexTrailing = "";
+    RoomsProvider roomsProvider = Provider.of<RoomsProvider>(context);
 
     if (RegExp(r'\d').hasMatch(lesson.lessonIndex)) lessonIndexTrailing = ".";
 
@@ -68,7 +72,18 @@ class LessonView extends StatelessWidget {
 
           // Details
           if (lesson.room != "")
-            Detail(title: "Room".i18n, description: lesson.room),
+            GestureDetector(
+              onTap: () => showRoomEditBottomCard(context: context, lessons: [
+                [lesson]
+              ]),
+              child: Detail(
+                title: "Room".i18n,
+                description: roomsProvider.getRoomForLesson(lesson),
+                descColor: roomsProvider.hasOverwrite(lesson)
+                    ? Theme.of(context).colorScheme.secondary
+                    : null,
+              ),
+            ),
           if (lesson.description != "")
             Detail(title: "Description".i18n, description: lesson.description),
           if (lesson.lessonYearIndex != null)
