@@ -67,9 +67,7 @@ class LessonTile extends StatelessWidget {
     }
 
     lesson.exams.forEach((e) {
-      Exam exam = Provider.of<ExamProvider>(context, listen: false)
-          .exams
-          .firstWhere((t) => t.id == e, orElse: () => Exam.fromJson({}));
+      Exam exam = Provider.of<ExamProvider>(context, listen: false).exams.firstWhere((t) => t.id == e, orElse: () => Exam.fromJson({}));
       if (exam.id != "")
         subtiles.add(LessonSubtile(
           type: LessonSubtileType.exam,
@@ -144,7 +142,7 @@ class LessonTile extends StatelessWidget {
                                 maxLines: 2,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    color: roomsProvider.hasOverwrite(lesson)
+                                    color: roomsProvider.hasOverride(lesson)
                                         ? Theme.of(context).colorScheme.secondary
                                         : AppColors.of(context).text.withOpacity(.75)),
                               ),
