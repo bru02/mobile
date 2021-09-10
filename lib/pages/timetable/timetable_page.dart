@@ -12,7 +12,7 @@ import 'package:filcnaplo_mobile_ui/common/profile_image/profile_image.dart';
 import 'package:filcnaplo_mobile_ui/common/widgets/lesson_tile.dart';
 import 'package:filcnaplo_mobile_ui/common/widgets/lesson_view.dart';
 import 'package:filcnaplo_kreta_api/controllers/timetable_controller.dart';
-import 'package:filcnaplo_mobile_ui/common/widgets/room_edit_bottom_card.dart';
+import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/room_edit_bottom_card.dart';
 import 'package:filcnaplo_mobile_ui/pages/timetable/day_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -306,23 +306,20 @@ class _TimetablePageState extends State<TimetablePage> with TickerProviderStateM
                 : Center(
                     child: CircularProgressIndicator(
                       color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
           ),
         ),
       ),
-      ),
-      floatingActionButton:
-          (_controller.days?.length ?? 0) > 0 && editableLessons.length > 3
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 40.0),
-                  child: FloatingActionButton(
-                      child: Icon(FeatherIcons.edit2,
-                          color: Theme.of(context).colorScheme.secondary),
-                      backgroundColor: Theme.of(context).backgroundColor,
-                      tooltip: "Edit rooms",
-                      onPressed: () => showRoomEditBottomCard(
-                          context: context, lessons: editableLessons)))
-              : null,
+      floatingActionButton: (_controller.days?.length ?? 0) > 0 && editableLessons.length > 3
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: FloatingActionButton(
+                  child: Icon(FeatherIcons.edit2, color: Theme.of(context).colorScheme.secondary),
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  tooltip: "Edit rooms",
+                  onPressed: () => showRoomEditBottomCard(context: context, lessons: editableLessons, showHelp: true)))
+          : null,
     );
   }
 }

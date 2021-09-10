@@ -3,7 +3,7 @@ import 'package:filcnaplo/utils/format.dart';
 import 'package:filcnaplo_kreta_api/models/lesson.dart';
 import 'package:filcnaplo_mobile_ui/common/bottom_card.dart';
 import 'package:filcnaplo_mobile_ui/common/detail.dart';
-import 'package:filcnaplo_mobile_ui/common/widgets/room_edit_bottom_card.dart';
+import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/room_edit_bottom_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:filcnaplo/api/providers/rooms_provider.dart';
