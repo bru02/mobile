@@ -5,6 +5,7 @@ import 'package:filcnaplo_mobile_ui/common/bottom_card.dart';
 import 'package:filcnaplo_mobile_ui/common/detail.dart';
 import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/room_edit_bottom_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:filcnaplo/api/providers/rooms_provider.dart';
 import 'lesson_view.i18n.dart';
@@ -70,19 +71,29 @@ class LessonView extends StatelessWidget {
 
           // Details
           if (lesson.room != "")
-            GestureDetector(
-              onTap: () => showRoomEditBottomCard(context: context, lessons: [
-                [lesson]
-              ]),
-              child: Detail(
-                title: "Room".i18n,
-                description: roomsProvider.getRoomForLesson(lesson),
-                descColor: roomsProvider.hasOverwrite(lesson) ? Theme.of(context).colorScheme.secondary : null,
-              ),
+            Row(
+              children: [
+                Expanded(
+                    child: Detail(
+                  title: "Room".i18n,
+                  description: roomsProvider.getRoomForLesson(lesson),
+                  descColor: roomsProvider.hasOverride(lesson) ? Theme.of(context).colorScheme.secondary : null,
+                )),
+                IconButton(
+                  iconSize: 14,
+                  onPressed: () => showRoomEditBottomCard(context: context, lessons: [
+                    [lesson]
+                  ]),
+                  constraints: BoxConstraints(minWidth: 48.0),
+                  padding: EdgeInsets.zero,
+                  color: Theme.of(context).colorScheme.secondary,
+                  icon: Icon(FeatherIcons.edit2),
+                  tooltip: 'Edit Room'.i18n,
+                ),
+              ],
             ),
           if (lesson.description != "") Detail(title: "Description".i18n, description: lesson.description),
-          if (lesson.lessonYearIndex != null)
-            Detail(title: "Lesson Number".i18n, description: "${lesson.lessonYearIndex}."),
+          if (lesson.lessonYearIndex != null) Detail(title: "Lesson Number".i18n, description: "${lesson.lessonYearIndex}."),
           if (lesson.groupName != "") Detail(title: "Group".i18n, description: lesson.groupName),
         ],
       ),

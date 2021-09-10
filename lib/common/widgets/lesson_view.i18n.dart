@@ -8,18 +8,21 @@ extension Localization on String {
           "Description": "Description",
           "Lesson Number": "Lesson Number",
           "Group": "Group",
+          "Edit Room": "Edit Room"
         },
         "hu_hu": {
           "Room": "Terem",
           "Description": "Leírás",
           "Lesson Number": "Éves óraszám",
           "Group": "Csoport",
+          "Edit Room": "Terem szerkesztése"
         },
         "de_de": {
           "Room": "Raum",
           "Description": "Bezeichnung",
           "Lesson Number": "Ordinalzahl",
           "Group": "Gruppe",
+          "Edit Room": "Raum bearbeiten"
         }
       };
 
