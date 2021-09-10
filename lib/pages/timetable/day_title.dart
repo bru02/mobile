@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:filcnaplo/utils/format.dart';
 
 class DayTitle extends StatefulWidget {
-  const DayTitle(
-      {Key? key,
-      required this.dayTitle,
-      required this.controller,
-      this.fontSize = 32.0,
-      this.fontWeight = FontWeight.bold})
+  const DayTitle({Key? key, required this.dayTitle, required this.controller, this.fontSize = 32.0, this.fontWeight = FontWeight.bold})
       : super(key: key);
 
   final String Function(int) dayTitle;
@@ -42,8 +37,8 @@ class _DayTitleState extends State<DayTitle> {
         builder: (context, _) {
           double value = widget.controller.animation!.value;
 
-          if (widget.controller.indexIsChanging &&
-              widget.dayTitle(value.ceil()) == widget.dayTitle(value.floor())) {
+          // when going from A to A, don't animate
+          if (widget.controller.indexIsChanging && widget.dayTitle(value.ceil()) == widget.dayTitle(value.floor())) {
             value = value.roundToDouble();
           }
 
@@ -59,11 +54,8 @@ class _DayTitleState extends State<DayTitle> {
                     width: MediaQuery.of(context).size.width / 1.5,
                     child: Text(
                       widget.dayTitle(index).capital(),
-                      style: TextStyle(
-                          color:
-                              AppColors.of(context).text.withOpacity(opacity),
-                          fontSize: widget.fontSize,
-                          fontWeight: widget.fontWeight),
+                      style:
+                          TextStyle(color: AppColors.of(context).text.withOpacity(opacity), fontSize: widget.fontSize, fontWeight: widget.fontWeight),
                     ),
                   );
                 },
