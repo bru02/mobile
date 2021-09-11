@@ -9,6 +9,7 @@ extension Localization on String {
           "Done": "Done",
           "Cancel": "Cancel",
           "Back": "Back",
+          "Invalid room": "Room can't be empty"
         },
         "hu_hu": {
           "Classroom": "Terem",
@@ -16,6 +17,7 @@ extension Localization on String {
           "Done": "Kész",
           "Cancel": "Mégse",
           "Back": "Vissza",
+          "Invalid room": "A semmi közepén lesz ez az óra? Na ne."
         },
         "de_de": {
           "Classroom": "Raum",
@@ -23,6 +25,7 @@ extension Localization on String {
           "Done": "Fertig",
           "Cancel": "Kündigen",
           "Back": "Zurück",
+          "Invalid room": "Raum kann nicht leer sein"
         }
       };
 

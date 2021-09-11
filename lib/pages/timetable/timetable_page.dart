@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:filcnaplo/api/providers/rooms_provider.dart';
 import 'package:filcnaplo_kreta_api/providers/timetable_provider.dart';
 import 'package:filcnaplo/api/providers/user_provider.dart';
 import 'package:filcnaplo/theme.dart';
@@ -12,6 +10,7 @@ import 'package:filcnaplo_mobile_ui/common/profile_image/profile_image.dart';
 import 'package:filcnaplo_mobile_ui/common/widgets/lesson_tile.dart';
 import 'package:filcnaplo_mobile_ui/common/widgets/lesson_view.dart';
 import 'package:filcnaplo_kreta_api/controllers/timetable_controller.dart';
+import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/helper.dart';
 import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/room_edit_bottom_card.dart';
 import 'package:filcnaplo_mobile_ui/pages/timetable/day_title.dart';
 import 'package:flutter/cupertino.dart';
@@ -94,7 +93,7 @@ class _TimetablePageState extends State<TimetablePage> with TickerProviderStateM
   Widget build(BuildContext context) {
     user = Provider.of<UserProvider>(context);
     timetableProvider = Provider.of<TimetableProvider>(context);
-    editableLessons = Provider.of<RoomsProvider>(context).getEditableLessons();
+    editableLessons = RoomOverridesHelper(context).getEditableLessons();
 
     // First name
     List<String> nameParts = user.name?.split(" ") ?? ["?"];

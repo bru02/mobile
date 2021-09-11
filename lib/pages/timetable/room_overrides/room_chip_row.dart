@@ -1,8 +1,7 @@
-import 'package:filcnaplo/api/providers/rooms_provider.dart';
 import 'package:filcnaplo/theme.dart';
+import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RoomChipRow extends StatefulWidget {
   RoomChipRow(this.onTap, {Key? key}) : super(key: key);
@@ -14,21 +13,20 @@ class RoomChipRow extends StatefulWidget {
 }
 
 class _RoomChipRowState extends State<RoomChipRow> {
-  late RoomsProvider provider;
+  late RoomOverridesHelper helper;
   late int initialLength;
   late List<String> prevRooms;
   late GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
   void onProviderUpdate() {
-    List<String> rooms = provider.rooms;
+    List<String> rooms = helper.rooms;
     rooms.where((r) => !prevRooms.contains(r)).map((r) => rooms.indexOf(r)).forEach((i) {
       listKey.currentState!.insertItem(i);
     });
-    int j = 0;
     prevRooms.where((r) => !rooms.contains(r)).map((r) => prevRooms.indexOf(r)).forEach((i) {
-      print(++j);
+      String room = prevRooms[i];
       listKey.currentState!.removeItem(i, (ctx, anim) {
-        return RoomChip(prevRooms[i], anim, null);
+        return RoomChip(room, anim, null);
       });
     });
     prevRooms = rooms;
@@ -37,15 +35,15 @@ class _RoomChipRowState extends State<RoomChipRow> {
   @override
   void initState() {
     super.initState();
-    provider = Provider.of<RoomsProvider>(context, listen: false);
-    provider.addListener(this.onProviderUpdate);
-    prevRooms = provider.rooms;
+    helper = RoomOverridesHelper(context, listen: false);
+    helper.provider.addListener(this.onProviderUpdate);
+    prevRooms = helper.rooms;
     initialLength = prevRooms.length;
   }
 
   @override
   void dispose() {
-    provider.removeListener(this.onProviderUpdate);
+    helper.provider.removeListener(this.onProviderUpdate);
     super.dispose();
   }
 
@@ -54,7 +52,7 @@ class _RoomChipRowState extends State<RoomChipRow> {
     return Row(children: <Widget>[
       SizedBox(
           width: MediaQuery.of(context).size.width - 72,
-          height: provider.rooms.length > 0 ? 48.0 : 0,
+          height: helper.rooms.length > 0 ? 48.0 : 0,
           child: ShaderMask(
             shaderCallback: (Rect bounds) {
               return LinearGradient(
@@ -75,7 +73,7 @@ class _RoomChipRowState extends State<RoomChipRow> {
               shrinkWrap: true,
               physics: const BouncingScrollPhysics(),
               initialItemCount: initialLength,
-              itemBuilder: (ctx, i, anim) => (RoomChip(provider.rooms[i], anim, widget.onTap)),
+              itemBuilder: (ctx, i, anim) => (RoomChip(helper.rooms[i], anim, widget.onTap)),
             ),
           ))
     ]);

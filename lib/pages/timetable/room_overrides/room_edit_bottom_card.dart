@@ -1,10 +1,8 @@
+import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/helper.dart';
 import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/room_chip_row.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:i18n_extension/i18n_widget.dart';
-import 'package:filcnaplo/api/providers/rooms_provider.dart';
-import 'package:filcnaplo/theme.dart';
 import 'package:filcnaplo_kreta_api/models/lesson.dart';
 import 'package:filcnaplo_mobile_ui/common/bottom_card.dart';
 import 'package:filcnaplo_mobile_ui/pages/timetable/day_title.dart';
@@ -20,7 +18,7 @@ class RoomEditBottomCard extends StatefulWidget {
 }
 
 class _RoomEditBottomCardState extends State<RoomEditBottomCard> with SingleTickerProviderStateMixin {
-  late RoomsProvider provider;
+  late RoomOverridesHelper helper;
   late TabController controller;
   final FocusNode focusNode = FocusNode();
   final TextEditingController textController = TextEditingController();
@@ -33,14 +31,14 @@ class _RoomEditBottomCardState extends State<RoomEditBottomCard> with SingleTick
     controller.animation!.addListener(() {
       setState(() {});
     });
-    provider = Provider.of<RoomsProvider>(context, listen: false);
+    helper = RoomOverridesHelper(context, listen: false);
     next(diff: 0);
   }
 
   void next({int diff = 1}) {
     if (diff > 0 && !globalKey.currentState!.validate()) return;
 
-    if (diff != 0) widget.lessons[controller.index].forEach((l) => provider.overrideRoom(textController.text.trim(), l));
+    if (diff != 0) widget.lessons[controller.index].forEach((l) => helper.overrideRoom(textController.text.trim(), l));
 
     int target = controller.index + diff;
 
@@ -51,7 +49,7 @@ class _RoomEditBottomCardState extends State<RoomEditBottomCard> with SingleTick
       controller.animateTo(target);
     });
 
-    String text = provider.getRoomForLesson(widget.lessons[controller.index][0]);
+    String text = helper.getRoomForLesson(widget.lessons[controller.index][0]);
     textController.value = textController.value.copyWith(
       text: text,
       selection: TextSelection(baseOffset: 0, extentOffset: text.length),
@@ -94,7 +92,7 @@ class _RoomEditBottomCardState extends State<RoomEditBottomCard> with SingleTick
                       },
                       validator: (String? value) {
                         return (widget.lessons.length > 1 && value != null && value.trim().isEmpty)
-                            ? ('A semmi közepén lesz ez az óra? Na ne.' + (provider.rooms.length > 0 ? ' Innen is választhatsz:' : ''))
+                            ? 'Invalid room'.i18n
                             : null;
                       },
                       key: globalKey,
