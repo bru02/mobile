@@ -1,5 +1,4 @@
 import 'package:filcnaplo/api/providers/update_provider.dart';
-import 'package:filcnaplo/api/providers/overrides_provider.dart';
 import 'package:filcnaplo/models/settings.dart';
 import 'package:filcnaplo/theme.dart';
 import 'package:filcnaplo_kreta_api/client/client.dart';
@@ -55,9 +54,6 @@ class NavigationState extends State<Navigation> with WidgetsBindingObserver {
     // Get releases
     updateProvider = Provider.of<UpdateProvider>(context, listen: false);
     updateProvider.fetch();
-
-    // Get rooms
-    Provider.of<OverridesProvider>(context, listen: false).fetchRecurring();
   }
 
   @override

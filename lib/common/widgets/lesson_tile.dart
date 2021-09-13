@@ -1,6 +1,5 @@
 import 'package:filcnaplo_kreta_api/providers/exam_provider.dart';
 import 'package:filcnaplo_kreta_api/providers/homework_provider.dart';
-import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/helper.dart';
 import 'package:filcnaplo/theme.dart';
 import 'package:filcnaplo_kreta_api/models/exam.dart';
 import 'package:filcnaplo_kreta_api/models/homework.dart';
@@ -16,14 +15,14 @@ import 'package:provider/provider.dart';
 import 'lesson_tile.i18n.dart';
 
 class LessonTile extends StatelessWidget {
-  const LessonTile(this.lesson, {Key? key, this.onTap}) : super(key: key);
+  const LessonTile(this.staticLesson, {Key? key, this.onTap}) : super(key: key);
 
-  final Lesson lesson;
+  final Lesson staticLesson;
   final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    RoomOverridesHelper roomsHelper = RoomOverridesHelper(context);
+    Lesson lesson = staticLesson.reactive(context);
     List<Widget> subtiles = [];
 
     Color accent = Theme.of(context).colorScheme.secondary;
@@ -136,13 +135,13 @@ class LessonTile extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(right: 6.0),
                               child: Text(
-                                roomsHelper.getRoomForLesson(lesson),
+                                lesson.room,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.fade,
                                 maxLines: 2,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    color: roomsHelper.hasOverride(lesson)
+                                    color: lesson.hasOverride('room')
                                         ? Theme.of(context).colorScheme.secondary
                                         : AppColors.of(context).text.withOpacity(.75)),
                               ),

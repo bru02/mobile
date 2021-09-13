@@ -1,4 +1,4 @@
-import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/helper.dart';
+import 'package:filcnaplo_kreta_api/providers/timetable_provider.dart';
 import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/room_chip_row.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +6,7 @@ import 'package:i18n_extension/i18n_widget.dart';
 import 'package:filcnaplo_kreta_api/models/lesson.dart';
 import 'package:filcnaplo_mobile_ui/common/bottom_card.dart';
 import 'package:filcnaplo_mobile_ui/pages/timetable/day_title.dart';
+import 'package:provider/provider.dart';
 import './room_edit_bottom_card.i18n.dart';
 
 class RoomEditBottomCard extends StatefulWidget {
@@ -18,7 +19,7 @@ class RoomEditBottomCard extends StatefulWidget {
 }
 
 class _RoomEditBottomCardState extends State<RoomEditBottomCard> with SingleTickerProviderStateMixin {
-  late RoomOverridesHelper helper;
+  late TimetableProvider provider;
   late TabController controller;
   final FocusNode focusNode = FocusNode();
   final TextEditingController textController = TextEditingController();
@@ -31,14 +32,21 @@ class _RoomEditBottomCardState extends State<RoomEditBottomCard> with SingleTick
     controller.animation!.addListener(() {
       setState(() {});
     });
-    helper = RoomOverridesHelper(context, listen: false);
+    provider = Provider.of<TimetableProvider>(context, listen: false);
     next(diff: 0);
   }
 
   void next({int diff = 1}) {
     if (diff > 0 && !globalKey.currentState!.validate()) return;
 
-    if (diff != 0) widget.lessons[controller.index].forEach((l) => helper.overrideRoom(textController.text.trim(), l));
+    if (diff != 0) {
+      List<Lesson> lessons = widget.lessons[controller.index];
+      String room = textController.text.trim();
+      if (room == lessons[0].original!.room) {
+        room = '';
+      }
+      lessons.forEach((l) => provider.override(l, 'room', room, recurring: true));
+    }
 
     int target = controller.index + diff;
 
@@ -48,8 +56,9 @@ class _RoomEditBottomCardState extends State<RoomEditBottomCard> with SingleTick
     setState(() {
       controller.animateTo(target);
     });
-
-    String text = helper.getRoomForLesson(widget.lessons[controller.index][0]);
+    Lesson l = widget.lessons[controller.index][0];
+    // When going backwards l.room isn't up-to-date, so we need to set it
+    String text = provider.getOverrideOfKind(l, 'room') ?? l.room;
     textController.value = textController.value.copyWith(
       text: text,
       selection: TextSelection(baseOffset: 0, extentOffset: text.length),
@@ -91,9 +100,7 @@ class _RoomEditBottomCardState extends State<RoomEditBottomCard> with SingleTick
                         focusNode.requestFocus();
                       },
                       validator: (String? value) {
-                        return (widget.lessons.length > 1 && value != null && value.trim().isEmpty)
-                            ? 'Invalid room'.i18n
-                            : null;
+                        return (widget.lessons.length > 1 && value != null && value.trim().isEmpty) ? 'Invalid room'.i18n : null;
                       },
                       key: globalKey,
                       controller: textController,

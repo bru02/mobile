@@ -6,19 +6,18 @@ import 'package:filcnaplo_mobile_ui/common/detail.dart';
 import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/room_edit_bottom_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:filcnaplo_mobile_ui/pages/timetable/room_overrides/helper.dart';
 import 'lesson_view.i18n.dart';
 
 class LessonView extends StatelessWidget {
-  const LessonView(this.lesson, {Key? key}) : super(key: key);
+  const LessonView(this.staticLesson, {Key? key}) : super(key: key);
 
-  final Lesson lesson;
+  final Lesson staticLesson;
 
   @override
   Widget build(BuildContext context) {
+    Lesson lesson = staticLesson.reactive(context);
     Color accent = Theme.of(context).colorScheme.secondary;
     String lessonIndexTrailing = "";
-    RoomOverridesHelper roomsHelper = RoomOverridesHelper(context);
 
     if (RegExp(r'\d').hasMatch(lesson.lessonIndex)) lessonIndexTrailing = ".";
 
@@ -75,8 +74,8 @@ class LessonView extends StatelessWidget {
                 Expanded(
                     child: Detail(
                   title: "Room".i18n,
-                  description: roomsHelper.getRoomForLesson(lesson),
-                  descColor: roomsHelper.hasOverride(lesson) ? Theme.of(context).colorScheme.secondary : null,
+                  description: lesson.room,
+                  descColor: lesson.hasOverride('room') ? Theme.of(context).colorScheme.secondary : null,
                 )),
                 IconButton(
                   iconSize: 14,

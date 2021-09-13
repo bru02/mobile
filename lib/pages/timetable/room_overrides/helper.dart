@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:filcnaplo/api/providers/overrides_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:filcnaplo_kreta_api/models/lesson.dart';
@@ -7,28 +6,9 @@ import 'package:filcnaplo_kreta_api/providers/timetable_provider.dart';
 
 class RoomOverridesHelper {
   late BuildContext _context;
-  late OverridesProvider provider;
 
   RoomOverridesHelper(BuildContext context, {bool listen = true}) {
     _context = context;
-    provider = Provider.of<OverridesProvider>(context, listen: listen);
-  }
-
-  Future<void> overrideRoom(String room, Lesson l) async {
-    if (room == l.room) room = '';
-    await provider.override(l, 'room', room, recurring: true);
-  }
-
-  List<String> get rooms {
-    return provider.getRecurringOverridesOfKind('room')..sort();
-  }
-
-  String getRoomForLesson(Lesson l) {
-    return provider.getOverrideOfKind(l, 'room') ?? l.room.replaceAll("_", " ");
-  }
-
-  bool hasOverride(Lesson l) {
-    return provider.getOverrideOfKind(l, 'room') != null;
   }
 
   List<List<Lesson>> getEditableLessons() {
@@ -37,10 +17,10 @@ class RoomOverridesHelper {
     Map<String, int> roomOccurances = Map();
 
     lessons.forEach((l) {
-      if (!roomOccurances.containsKey(l.room)) {
-        roomOccurances[l.room] = 1;
+      if (!roomOccurances.containsKey(l.original!.room)) {
+        roomOccurances[l.original!.room] = 1;
       } else {
-        roomOccurances[l.room] = roomOccurances[l.room]! + 1;
+        roomOccurances[l.original!.room] = roomOccurances[l.original!.room]! + 1;
       }
     });
 
@@ -56,7 +36,7 @@ class RoomOverridesHelper {
 
     lessons
         .where((l) =>
-            !hasOverride(l) &&
+            !l.hasOverride('room') &&
             // Sometimes a few classrooms are correct, we don't want to edit those
             roomOccurances[l.room] == highestOccurance &&
             l.subject.id != '')
